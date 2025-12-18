@@ -1,13 +1,16 @@
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QMainWindow
+from PySide6.QtWidgets import QApplication
 import sys
+from windows.home import MainWindow # Homepage window imported
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
 
-app = QApplication(sys.argv)
+def main():
+    app = QApplication(sys.argv)
 
-window = MainWindow()
-window.show()
+    window = MainWindow() # Main window
+    window.show()
 
-app.exec()
+    app.exec()
+
+
+if __name__ == "__main__":
+    main()
