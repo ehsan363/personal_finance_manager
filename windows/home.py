@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(1170, 650)
 
         # Window icon
-        self.setWindowIcon(QIcon('../img/icon.png'))
+        self.setWindowIcon(QIcon('img/iconOrange#141414bgR.png'))
 
         # Font elements
         font = QFont()
