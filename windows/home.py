@@ -2,6 +2,7 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QToolBar, QFrame
 from PySide6.QtGui import QAction, QFont, QIcon
 from PySide6.QtCore import Qt
+from data.database import DBmanager
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -63,8 +64,14 @@ class MainWindow(QMainWindow):
         self.budget = f'Budget: {int(self.budgetRead):,}AED'
         summaryLayout = QVBoxLayout(summaryCard)
         summaryLayout.addWidget(self.summaryLabel)
-        summaryLayout.addWidget(QLabel(self.budget))
-        summaryLayout.addWidget(QLabel("Expense: 💲XXX"))
+        budgetLabel = QLabel(self.budget)
+        budgetLabel.setAlignment(Qt.AlignTop)
+        summaryLayout.addWidget(budgetLabel)
+
+        db = DBmanager()
+        totalExpense = db.Expense()
+        totalExpenseLabel = QLabel(f"Expense: {totalExpense}")
+        summaryLayout.addWidget(totalExpenseLabel)
 
         topRow.addWidget(summaryCard)
 
