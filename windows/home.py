@@ -29,9 +29,40 @@ class MainWindow(QMainWindow):
 
         topRow = QHBoxLayout()
         topRow.setAlignment(Qt.AlignLeft)
-        topRow.setSpacing(20)
+        topRow.setSpacing(350)
+
+        bottomRow = QHBoxLayout()
+        bottomRow.setAlignment(Qt.AlignLeft)
+        bottomRow.setSpacing(20)
 
         # Create UI elements
+
+        # Toolbar options
+        toolbar = QToolBar("Main Toolbar", self)
+        self.addToolBar(toolbar)
+        toolbar.setStyleSheet('Background-color: #e78c4d; font-size: 20px;')
+        action_add = QAction("Add Expense", self)
+        toolbar.addAction(action_add)
+
+        action_add = QAction("Edit Expense", self)
+        toolbar.addAction(action_add)
+
+        action_add = QAction("Edit Income", self)
+        toolbar.addAction(action_add)
+
+        action_add = QAction("History", self)
+        toolbar.addAction(action_add)
+
+        action_add = QAction("User", self)
+        toolbar.addAction(action_add)
+
+        action_add = QAction("Settings", self)
+        toolbar.addAction(action_add)
+
+        # Connect button click to function
+        # #self.button.clicked.connect(self.increase_count)
+
+        # No row
         self.heading = QLabel("HomePage")
         self.heading.setAlignment(Qt.AlignLeft)
         self.heading.setStyleSheet("""
@@ -41,6 +72,7 @@ class MainWindow(QMainWindow):
             padding-left: 10px;
             """)
 
+        # Top row
         summaryCard = QFrame() # Summary card
         summaryCard.setFixedWidth(350)
         summaryCard.setStyleSheet("""
@@ -83,7 +115,7 @@ Expense: {totalExpense:,} AED'''
 
         # Greeting card
         greetingCard = QFrame()
-        greetingCard.setFixedWidth(450)
+        greetingCard.setFixedWidth(1050)
         greetingCard.setFixedHeight(100)
         greetingCard.setStyleSheet('''
         font-family: Caladea;
@@ -91,8 +123,7 @@ Expense: {totalExpense:,} AED'''
         background-color: #222222;
         color: White;
         font-size: 26px;
-        border-radius: 10px;
-        float: top;''')
+        border-radius: 10px;''')
 
         with open('data/user.txt', 'r') as file:
             self.username = file.read()
@@ -108,36 +139,11 @@ Expense: {totalExpense:,} AED'''
 
         greetingLayout = QVBoxLayout(greetingCard)
         greetingLayout.addWidget(self.greetingLabel)
-        greetingLayout.setAlignment(Qt.AlignCenter)
 
         topRow.addWidget(greetingCard)
 
-
-
-        # Toolbar options
-        toolbar = QToolBar("Main Toolbar", self)
-        self.addToolBar(toolbar)
-        toolbar.setStyleSheet('Background-color: #e78c4d; font-size: 20px;')
-        action_add = QAction("Add Expense", self)
-        toolbar.addAction(action_add)
-
-        action_add = QAction("Edit Expense", self)
-        toolbar.addAction(action_add)
-
-        action_add = QAction("Edit Income", self)
-        toolbar.addAction(action_add)
-
-        action_add = QAction("History", self)
-        toolbar.addAction(action_add)
-
-        action_add = QAction("User", self)
-        toolbar.addAction(action_add)
-
-        action_add = QAction("Settings", self)
-        toolbar.addAction(action_add)
-
-        # Connect button click to function
-        # #self.button.clicked.connect(self.increase_count)
+        # Bottom row
+        
 
         pageLayout.addWidget(self.heading)
         pageLayout.addLayout(topRow)
