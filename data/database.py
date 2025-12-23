@@ -1,7 +1,7 @@
 # Importing libraries
 import sqlite3
 from pathlib import Path
-from datetime import date
+from dateAndTime import tdy
 
 # Database path
 BASE_DIR = Path(__file__).resolve().parent
@@ -13,7 +13,7 @@ class DBmanager:
         self.conn.row_factory = sqlite3.Row # row_factory for better data handling
 
     def Expense(self):
-        today = date.today()
+        today = tdy()
         month = int(today.strftime('%m'))
         year = int(today.strftime('%Y'))
 
