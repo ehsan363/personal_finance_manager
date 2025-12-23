@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QPushButton, QLabel, QVBoxLa
 from PySide6.QtGui import QAction, QFont, QIcon
 from PySide6.QtCore import Qt
 from data.database import DBmanager
+from dateAndTime import greetingText
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -35,14 +36,17 @@ class MainWindow(QMainWindow):
         self.heading.setAlignment(Qt.AlignLeft)
         self.heading.setStyleSheet("""
             font-size: 36px;
+            font-family: DejaVu Sans Mono;
             padding-top: 15px;
             padding-left: 10px;
-            font-weight: bold;""")
+            """)
 
         summaryCard = QFrame() # Summary card
-        summaryCard.setFixedWidth(300)
+        summaryCard.setFixedWidth(350)
         summaryCard.setStyleSheet("""
             background-color: #222222;
+            font-family: Noto Sans Mono Thin;
+            font-weight: bold;
             padding: 10px;
             border-radius: 25px;
             margin-left: 20px;""")
@@ -54,41 +58,61 @@ class MainWindow(QMainWindow):
             font-weight: bold;
             margin-left: 30px;
             padding-top: 5px;
-            margin-top: 20px;
-            background-color: #242424;""")
+            margin-top: 20px;""")
 
-        budgetFile = open('data/budget.txt','r')
-        self.budgetRead = budgetFile.readline()
-        budgetFile.close()
+        with open('data/budget.txt', 'r') as file:
+            self.budgetRead = file.readline()
 
-        self.budget = f'Budget: {int(self.budgetRead):,}AED'
+        db = DBmanager()  # Expense from Database to summary card
+        totalExpense = db.Expense()
+
+        self.budget = f'''Budget: {int(self.budgetRead):,} AED
+Expense: {totalExpense:,} AED'''
+        self.budgetLabel = QLabel(self.budget)
+        self.budgetLabel.setAlignment(Qt.AlignTop)
+        self.budgetLabel.setStyleSheet('''
+        font-size: 18px;
+        ''')
+
         summaryLayout = QVBoxLayout(summaryCard)
         summaryLayout.addWidget(self.summaryLabel)
-        budgetLabel = QLabel(self.budget)
-        budgetLabel.setAlignment(Qt.AlignTop)
-        summaryLayout.addWidget(budgetLabel)
-
-        db = DBmanager()
-        totalExpense = db.Expense()
-        totalExpenseLabel = QLabel(f"Expense: {totalExpense}")
-        summaryLayout.addWidget(totalExpenseLabel)
+        summaryLayout.addWidget(self.budgetLabel)
 
         topRow.addWidget(summaryCard)
 
 
+        # Greeting card
+        greetingCard = QFrame()
+        greetingCard.setFixedWidth(450)
+        greetingCard.setFixedHeight(100)
+        greetingCard.setStyleSheet('''
+        font-family: Caladea;
+        font-weight: bold;
+        background-color: #222222;
+        color: White;
+        font-size: 26px;
+        border-radius: 10px;
+        float: top;''')
 
-        #aaaaaaaaaaaaaaaaaaa
-        graphCard = QFrame()
-        graphCard.setStyleSheet("""
-            background-color: #1f3b14;
-            border-radius: 20px;
-        """)
+        with open('data/user.txt', 'r') as file:
+            self.username = file.read()
 
-        graphLayout = QVBoxLayout(graphCard)
-        graphLayout.addWidget(QLabel("Graph", alignment=Qt.AlignCenter))
+        greeting = greetingText()
+        if greeting[0] == 'G' or greeting[0] == 'W':
+            self.greetingLabel = QLabel(f'{greeting} {self.username.title()}')
 
-        topRow.addWidget(graphCard, stretch=2)
-        #aaaaaaaaaaaaaaaaaaa
+        else:
+            self.greetingLabel = QLabel(greeting)
+        self.greetingLabel.setAlignment(Qt.AlignCenter)
+        self.greetingLabel.setStyleSheet('margin-top:25%;')
+
+        greetingLayout = QVBoxLayout(greetingCard)
+        greetingLayout.addWidget(self.greetingLabel)
+        greetingLayout.setAlignment(Qt.AlignCenter)
+
+        topRow.addWidget(greetingCard)
+
+
 
         # Toolbar options
         toolbar = QToolBar("Main Toolbar", self)
