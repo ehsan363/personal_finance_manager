@@ -38,7 +38,5 @@ def plot_bar_chart(figure, canvas):
     ax = figure.add_subplot(111)  # <-- Don't use during update
     ax.clear()
     ax.bar(income.keys(), income.values())
-    ax.set_title("Fruit Sales")
     ax.bar(expense.keys(), expense.values())
-    ax.set_title("Fruit Sales")
     canvas.draw()
