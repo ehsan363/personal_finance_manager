@@ -42,6 +42,32 @@ class DBmanager:
 
         return rows
 
+    def incomeExpense(self, month, tType):
+        today = tdy()
+        year = int(today.strftime('%Y'))
+
+        if tType == 'I':
+            cursor = self.conn.execute(f'''
+                        SELECT SUM(amount) AS total_income
+                        FROM transactions
+                        WHERE type = 'income'
+                        AND strftime('%Y', date) = '{year}'
+                        AND strftime('%m', date) = '{month}';''')
+            rows = cursor.fetchall()
+            totalIncome = float(f"{dict(rows[0])['total_income']}")
+            return int(totalIncome)
+
+        elif tType == 'E':
+            cursor = self.conn.execute(f'''
+                        SELECT SUM(amount) AS total_expense
+                        FROM transactions
+                        WHERE type = 'expense'
+                        AND strftime('%Y', date) = '{year}'
+                        AND strftime('%m', date) = '{month}';''')
+            rows = cursor.fetchall()
+            totalExpense = float(f"{dict(rows[0])['total_expense']}")
+            return int(totalExpense)
+
     # Function to close SQLite
     def close(self):
         conn.close()
