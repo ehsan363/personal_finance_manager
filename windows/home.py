@@ -4,6 +4,7 @@ from PySide6.QtGui import QAction, QFont, QIcon
 from PySide6.QtCore import Qt
 from data.database import DBmanager
 from dateAndTime import greetingText
+from barchartMatplotlib import initiation, plot_bar_chart
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -33,7 +34,7 @@ class MainWindow(QMainWindow):
 
         bottomRow = QHBoxLayout()
         bottomRow.setAlignment(Qt.AlignLeft)
-        bottomRow.setSpacing(20)
+        bottomRow.setSpacing(210)
 
         # Create UI elements
 
@@ -147,7 +148,7 @@ Expense: {totalExpense:,} AED'''
             font-size: 22px;
             color: White;
             background-color: #222222;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-left: 20px;
             font-family: Noto Sans Mono Thin;
             font-weight: bold;
@@ -228,7 +229,16 @@ Expense: {totalExpense:,} AED'''
         historyLayout.addWidget(self.transactionLabel3)
         historyLayout.addWidget(self.transactionLabel4)
 
+        # Bargraph with Matplotlib
+        barCard = QFrame()
+        barCard.setFixedWidth(600)
+
+
+        figure, canvas = initiation()
+        plot_bar_chart(figure, canvas)
+
         bottomRow.addWidget(historyCard)
+        bottomRow.addWidget(canvas)
 
         pageLayout.addWidget(self.headingLabel)
         pageLayout.addLayout(topRow)

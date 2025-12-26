@@ -2,9 +2,6 @@ from datetime import datetime, date
 import random
 from itertools import compress
 
-from mesonbuild.utils.universal import partition
-
-
 def tdy():
     return datetime.now()
 
