@@ -238,8 +238,8 @@ Balance: {int(self.budgetRead)-totalExpense:,.2f} AED'''
             border-radius: 20px;''')
 
 
-        figure, canvas = initiation()
-        plot_bar_chart(figure, canvas)
+        self.figure, self.canvas = initiation()
+        plot_bar_chart(self.figure, self.canvas)
 
         barLayout = QVBoxLayout(barCard)
         barLayout.addWidget(canvas)
