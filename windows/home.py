@@ -1,13 +1,20 @@
 # Importing modules from PySide6 library
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QToolBar, QFrame
 from PySide6.QtGui import QAction, QFont, QIcon
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt, QSize, Signal
 from data.database import DBmanager
 from dateAndTime import greetingText
 from barchartMatplotlib import initiation, plot_bar_chart
 import sys
 
 class MainWindow(QMainWindow):
+    addExpense_Signal = Signal()
+    editExpense_Signal = Signal()
+    editIncome_Signal = Signal()
+    history_Signal = Signal()
+    user_Signal = Signal()
+    settings_Signal = Signal()
+
     def __init__(self):
         super().__init__()
 
@@ -45,23 +52,30 @@ class MainWindow(QMainWindow):
         toolbar.setMovable(False)
         toolbar.setStyleSheet('Background-color: #ed7521; font-size: 20px;')
         toolbar.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+
         action_add = QAction(QIcon('img/more_icon.png'),"Add Expense", self)
         toolbar.addAction(action_add)
+        action_add.triggered.connect(self.addExpense_Signal.emit)
 
         action_add = QAction(QIcon('img/edit_icon(1).png'),"Edit Expense", self)
         toolbar.addAction(action_add)
+        action_add.triggered.connect(self.editExpense_Signal.emit)
 
         action_add = QAction(QIcon('img/edit_icon.png'),"Edit Income", self)
         toolbar.addAction(action_add)
+        action_add.triggered.connect(self.editIncome_Signal.emit)
 
         action_add = QAction(QIcon('img/history_icon.png'),"History", self)
         toolbar.addAction(action_add)
+        action_add.triggered.connect(self.history_Signal.emit)
 
         action_add = QAction(QIcon('img/user_icon.png'),"User", self)
+        action_add.triggered.connect(self.user_Signal.emit)
         toolbar.addAction(action_add)
 
         action_add = QAction(QIcon('img/settings_icon.png'),"Settings", self)
         toolbar.addAction(action_add)
+        action_add.triggered.connect(self.settings_Signal.emit)
 
         # Connect button click to function
         # #self.button.clicked.connect(self.increase_count)
