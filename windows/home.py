@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         toolbar.setStyleSheet('Background-color: #ed7521; font-size: 20px;')
         toolbar.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
-        action_add = QAction(QIcon('img/homepage_icon.png'),"Homepage", self)
+        action_add = QAction(QIcon('img/refresh_icon.png'),"Refresh", self)
         toolbar.addAction(action_add)
         action_add.triggered.connect(self.gohomepage_Signal.emit)
 

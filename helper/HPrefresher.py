@@ -40,7 +40,7 @@ def transactionHistoryRefresher(historyLayout):
     transactionHistory = db.history()  # Transaction history from DB
 
     transactionHistory0 = f'''{transactionHistory[0][0]:<30}             {transactionHistory[0][1] + ' AED':>15}
-    {transactionHistory[0][2]}'''
+{transactionHistory[0][2]}'''
     transactionLabel0 = QLabel(f'{transactionHistory0}')
     if transactionHistory[0][3] == 'expense':
         transactionColorCode = '#c71413'
@@ -52,7 +52,7 @@ def transactionHistoryRefresher(historyLayout):
                 margin-top: 10px;''')
 
     transactionHistory1 = f'''{transactionHistory[1][0]:<30}             {transactionHistory[1][1] + ' AED':>15}
-    {transactionHistory[1][2]}'''
+{transactionHistory[1][2]}'''
     transactionLabel1 = QLabel(f'{transactionHistory1}')
     if transactionHistory[1][3] == 'expense':
         transactionColorCode = '#c71413'
@@ -64,7 +64,7 @@ def transactionHistoryRefresher(historyLayout):
                 margin-top: 10px;''')
 
     transactionHistory2 = f'''{transactionHistory[2][0]:<30}             {transactionHistory[2][1] + ' AED':>15}
-    {transactionHistory[2][2]}'''
+{transactionHistory[2][2]}'''
     transactionLabel2 = QLabel(f'{transactionHistory2}')
     if transactionHistory[2][3] == 'expense':
         transactionColorCode = '#c71413'
@@ -76,7 +76,7 @@ def transactionHistoryRefresher(historyLayout):
                 margin-top: 10px;''')
 
     transactionHistory3 = f'''{transactionHistory[3][0]:<30}             {transactionHistory[3][1] + ' AED':>15}
-    {transactionHistory[3][2]}'''
+{transactionHistory[3][2]}'''
     transactionLabel3 = QLabel(f'{transactionHistory3}')
     if transactionHistory[3][3] == 'expense':
         transactionColorCode = '#c71413'
@@ -88,7 +88,7 @@ def transactionHistoryRefresher(historyLayout):
                 margin-top: 10px;''')
 
     transactionHistory4 = f'''{transactionHistory[4][0]:<30}             {transactionHistory[4][1] + ' AED':>15}
-    {transactionHistory[4][2]}'''
+{transactionHistory[4][2]}'''
     transactionLabel4 = QLabel(f'{transactionHistory4}')
     if transactionHistory[4][3] == 'expense':
         transactionColorCode = '#c71413'

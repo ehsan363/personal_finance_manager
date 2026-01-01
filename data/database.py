@@ -17,8 +17,6 @@ class DBmanager:
         month = today.strftime('%m')
         year = today.strftime('%Y')
 
-        print(year)
-        print(month)
         cursor = self.conn.execute(f'''
             SELECT SUM(amount) AS total_expense
             FROM transactions
