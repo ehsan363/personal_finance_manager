@@ -1,8 +1,10 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel
-from PySide6.QtGui import QIcon, QFont
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton
+from PySide6.QtGui import QIcon, QFont, QKeySequence
+from PySide6.QtCore import Qt, Signal
 
 class settingsWindow(QMainWindow):
+    goHome_Signal = Signal()
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle('FundTrack') # Title of the window
@@ -35,6 +37,27 @@ class settingsWindow(QMainWindow):
             padding-top: 15px;
             padding-left: 10px;""")
 
+        backButton = QPushButton(QIcon('img/back_icon.png'), 'Back')
+        backButton.setShortcut(QKeySequence('Ctrl+W'))
+        backButton.setStyleSheet('''
+        QPushButton {
+            background-color: #ed7521;
+            color: black;
+            padding: 10px 20px 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: left;
+        }
+        QPushButton:hover {
+            background-color: #f08337;
+        }
+        QPushButton:pressed {
+            background-color: #ed6709;
+        }
+        ''')
+        backButton.clicked.connect(self.goHome_Signal.emit)
+
+        pageLayout.addWidget(backButton)
         pageLayout.addWidget(self.headingLabel)
 
         pageLayout.addStretch()

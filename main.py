@@ -11,7 +11,9 @@ import sys
 class AppController:
     def __init__(self):
         self.window = MainWindow() # Main window
-        self.window.gohomepage_Signal.connect(self.refresh)
+
+        # Taskbar Buttons
+        self.window.refresh_Signal.connect(self.refresh)
         self.window.addExpense_Signal.connect(self.open_addexpense)
         self.window.editExpense_Signal.connect(self.open_editexpense)
         self.window.editIncome_Signal.connect(self.open_editincome)
@@ -20,47 +22,56 @@ class AppController:
         self.window.settings_Signal.connect(self.open_settings)
         self.window.show()
 
-        # self.app.exec()
     def refresh(self):
+        self.window.refresh()
+
+    def go_home(self):
+        if self.sub_window:
+            self.sub_window.close()
+
+        self.window.show()
         self.window.refresh()
 
     def open_addexpense(self):
         self.sub_window = addExpenseWindow()
+        self.sub_window.goHome_Signal.connect(self.go_home)
         self.sub_window.show()
-        self.window.close()
+        self.window.hide()
 
 
     def open_editexpense(self):
         self.sub_window = editExpenseWindow()
+        self.sub_window.goHome_Signal.connect(self.go_home)
         self.sub_window.show()
-        self.window.close()
+        self.window.hide()
 
     def open_editincome(self):
         self.sub_window = editIncomeWindow()
+        self.sub_window.goHome_Signal.connect(self.go_home)
         self.sub_window.show()
-        self.window.close()
+        self.window.hide()
 
     def open_history(self):
         self.sub_window = historyWindow()
+        self.sub_window.goHome_Signal.connect(self.go_home)
         self.sub_window.show()
-        self.window.close()
+        self.window.hide()
 
     def open_user(self):
         self.sub_window = userWindow()
+        self.sub_window.goHome_Signal.connect(self.go_home)
         self.sub_window.show()
-        self.window.close()
+        self.window.hide()
 
     def open_settings(self):
         self.sub_window = settingsWindow()
+        self.sub_window.goHome_Signal.connect(self.go_home)
         self.sub_window.show()
-        self.window.close()
+        self.window.hide()
 
 
 
-def start():
-    global app
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     controller = AppController()
     sys.exit(app.exec())
-
-start()

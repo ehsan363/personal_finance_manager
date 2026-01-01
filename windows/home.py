@@ -1,13 +1,13 @@
 # Importing modules from PySide6 library
 from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QToolBar, QFrame
-from PySide6.QtGui import QAction, QFont, QIcon
+from PySide6.QtGui import QAction, QFont, QIcon, QKeySequence
 from PySide6.QtCore import Qt, Signal
 from data.database import DBmanager
 from helper.barchartMatplotlib import initiation, plot_bar_chart
 from helper.HPrefresher import summaryCardRefresher, transactionHistoryRefresher, greetingRefresh, barchartRefresher
 
 class MainWindow(QMainWindow):
-    gohomepage_Signal = Signal()
+    refresh_Signal = Signal()
     addExpense_Signal = Signal()
     editExpense_Signal = Signal()
     editIncome_Signal = Signal()
@@ -55,31 +55,38 @@ class MainWindow(QMainWindow):
 
         action_add = QAction(QIcon('img/refresh_icon.png'),"Refresh", self)
         toolbar.addAction(action_add)
-        action_add.triggered.connect(self.gohomepage_Signal.emit)
+        action_add.triggered.connect(self.refresh_Signal.emit)
+        action_add.setShortcut(QKeySequence('Ctrl+R'))
 
         action_add = QAction(QIcon('img/more_icon.png'),"Add Expense", self)
         toolbar.addAction(action_add)
         action_add.triggered.connect(self.addExpense_Signal.emit)
+        action_add.setShortcut(QKeySequence('Alt+1'))
 
         action_add = QAction(QIcon('img/edit_icon(1).png'),"Edit Expense", self)
         toolbar.addAction(action_add)
         action_add.triggered.connect(self.editExpense_Signal.emit)
+        action_add.setShortcut(QKeySequence('Alt+2'))
 
         action_add = QAction(QIcon('img/edit_icon.png'),"Edit Income", self)
         toolbar.addAction(action_add)
         action_add.triggered.connect(self.editIncome_Signal.emit)
+        action_add.setShortcut(QKeySequence('Alt+3'))
 
         action_add = QAction(QIcon('img/history_icon.png'),"History", self)
         toolbar.addAction(action_add)
         action_add.triggered.connect(self.history_Signal.emit)
+        action_add.setShortcut(QKeySequence('Alt+4'))
 
         action_add = QAction(QIcon('img/user_icon.png'),"User", self)
         action_add.triggered.connect(self.user_Signal.emit)
         toolbar.addAction(action_add)
+        action_add.setShortcut(QKeySequence('Alt+5'))
 
         action_add = QAction(QIcon('img/settings_icon.png'),"Settings", self)
         toolbar.addAction(action_add)
         action_add.triggered.connect(self.settings_Signal.emit)
+        action_add.setShortcut(QKeySequence('Alt+6'))
 
 
         # No row
@@ -136,7 +143,6 @@ class MainWindow(QMainWindow):
 
         self.greetingLabel = QLabel()
         self.greetingLabel.setAlignment(Qt.AlignCenter)
-        self.greetingLabel.setStyleSheet('margin-top:25%;')
 
         greetingLayout = QVBoxLayout(greetingCard)
         greetingLayout.addWidget(self.greetingLabel)
@@ -190,6 +196,10 @@ class MainWindow(QMainWindow):
         centralWidget.setStyleSheet('background-color: #141414; color: #ed7521;')
         self.setCentralWidget(centralWidget) # <-- Stuff into Central Widget
 
+        self.refresh()
+
+    def showHomepage(self):
+        self.show()
         self.refresh()
 
     def refresh(self):
