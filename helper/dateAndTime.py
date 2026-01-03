@@ -42,3 +42,7 @@ def dateCompare(compareDate):
         return f'{diffInDays} days ago'
     else:
         return f'{day}/{month}/{year}'
+
+def todayDate():
+    tdyDate = date.today()
+    return tdyDate
