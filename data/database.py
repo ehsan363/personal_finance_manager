@@ -77,6 +77,14 @@ class DBmanager:
                 totalExpense = float(f"{dict(rows[0])['total_expense']}")
             return int(totalExpense)
 
+    def categories(self, type):
+        cursor = self.conn.execute(f'SELECT * FROM categories WHERE type = ?;', (type,))
+        categoriesFetched = cursor.fetchall()
+        categorieList = []
+        for row in categoriesFetched:
+            categorieList.append(row['name'])
+        return categorieList
+
     # Function to close SQLite
     def close(self):
         conn.close()

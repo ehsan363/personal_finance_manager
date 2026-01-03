@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushBu
 from PySide6.QtGui import QIcon, QFont, QKeySequence
 from PySide6.QtCore import Qt, Signal, QDate
 from helper.dateAndTime import todayDate
+from data.database import DBmanager
 
 class addExpenseWindow(QMainWindow):
     goHome_Signal = Signal()
@@ -210,7 +211,6 @@ class addExpenseWindow(QMainWindow):
 
         self.categoryEntry = QComboBox()
         # Should change this to be extracted from the file and the selected "type"
-        self.categoryEntry.addItems(["Salary", "Freelance", "Bonus", "Interest", "Food", "Rent", "Transport", "Shopping", "Utilities", "Entertainment"])
         self.categoryEntry.setStyleSheet("""
             QComboBox {
                 font-size: 18px;
@@ -264,6 +264,9 @@ class addExpenseWindow(QMainWindow):
         row3CardLayout.setSpacing(40)
         row3CardLayout.addWidget(self.categoryEntry)
         row3CardLayout.addWidget(self.accountEntry)
+
+        self.typeEntry.currentTextChanged.connect(self.categoryChange)
+        self.categoryChange(self.typeEntry.currentText())
 
         # Description
         row4Card = QFrame()
@@ -333,3 +336,15 @@ class addExpenseWindow(QMainWindow):
 
     def enterDate(self):
         print(self.categoryEntry.text())
+
+    def categoryChange(self, typeSelected):
+        self.categoryEntry.clear()
+
+        db = DBmanager()
+        self.categoryDBIncome = db.categories('income')
+        self.categoryDBExpense = db.categories('expense')
+
+        if typeSelected == 'Income':
+            self.categoryEntry.addItems(self.categoryDBIncome)
+        else:
+            self.categoryEntry.addItems(self.categoryDBExpense)
