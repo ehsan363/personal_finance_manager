@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QDoubleSpinBox, QDateEdit, QComboBox, QTextEdit, QHBoxLayout, QFrame
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QDoubleSpinBox, QDateEdit, QComboBox, QTextEdit, QHBoxLayout, QFrame, QListView
 from PySide6.QtGui import QIcon, QFont, QKeySequence
 from PySide6.QtCore import Qt, Signal, QDate
 from helper.dateAndTime import todayDate
@@ -85,11 +85,52 @@ class addExpenseWindow(QMainWindow):
         self.dateEntry = QDateEdit()
         self.dateEntry.setDate(todayDate())
         self.dateEntry.setCalendarPopup(True)
-        self.dateEntry.setStyleSheet('''
-            background-color: #222222;
-            border-radius: 10px;
-            border: 1px solid #404040;
-            padding-bottom: 10px;''')
+        self.dateEntry.setDisplayFormat('dd-MM-yyyy')
+        self.dateEntry.setFixedWidth(150)
+        calendar = self.dateEntry.calendarWidget()
+        calendar.setMinimumSize(360, 300)
+        self.dateEntry.setStyleSheet("""
+        QDateEdit {
+            background-color: #222;
+            color: #eee;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 14px;
+        }
+        
+        QDateEdit:hover {
+            border: 1px solid #666;
+        }
+        
+        QDateEdit:focus {
+            border: 1px solid #ed7521;
+        }
+        
+        QDateEdit::drop-down {
+            subcontrol-origin: padding;
+            subcontrol-position: top right;
+            width: 24px;
+            border-left: 1px solid #444;
+        }
+        
+        QDateEdit::down-arrow {
+            image: url(img/down_icon.png);
+            width: 14px;
+            height: 14px;
+        }
+        QCalendarWidget QToolButton#qt_calendar_prevmonth {
+            qproperty-icon: url(img/chevron-left.png);
+            qproperty-iconSize: 16px;
+        }
+        
+        QCalendarWidget QToolButton#qt_calendar_nextmonth {
+            qproperty-icon: url(img/chevron-right.png);
+            qproperty-iconSize: 16px;
+        }
+        QCalendarWidget QAbstractItemView {
+           font-size: 16px;
+        }""")
 
         row1CardLayout = QHBoxLayout(row1Card)
         row1CardLayout.addWidget(self.dateEntry)
@@ -103,24 +144,58 @@ class addExpenseWindow(QMainWindow):
         self.amountEntry = QDoubleSpinBox()
         self.amountEntry.setDecimals(2)
         self.amountEntry.setMaximum(10_000_000)
-        self.amountEntry.setPrefix('AED ')
+        self.amountEntry.setSuffix(' AED')
         self.amountEntry.setStyleSheet('''
-            font-size: 18px;
-            padding-left: 25px;
-            background-color: #222222;
-            border-radius: 5px;
-            border: 1px solid #404040;
-            padding: 5px;''')
+            QDoubleSpinBox {
+                background-color: #222;
+                color: #eee;
+                border: 1px solid #444;
+                border-radius: 8px;
+                padding: 6px 10px;
+                font-size: 16px;
+            }
+            
+            QDoubleSpinBox:hover {
+                border: 1px solid #666;
+            }
+            
+            QDoubleSpinBox:focus {
+                border: 1px solid #ed7521;
+            }
+            
+            QDoubleSpinBox::up-button,
+            QDoubleSpinBox::down-button {
+                width: 0px;
+                border: none;
+            }''')
 
         # Type
         self.typeEntry = QComboBox()
         self.typeEntry.addItems(['Income', 'Expense'])
-        self.typeEntry.setStyleSheet('''
-            font-size: 18px;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #404040;
-            background-color: #222222;''')
+        self.typeEntry.setView(QListView())
+        self.typeEntry.setStyleSheet("""
+            QComboBox {
+                font-size: 18px;
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #404040;
+                background-color: #222222;
+                font-family: Adwaita mono;
+            }
+            
+            QComboBox QAbstractItemView::item:hover {
+                background-color: #404040;
+                color: #ed7521;
+            }
+            
+            QComboBox QAbstractItemView::item:selected {
+                background-color: #222222;
+                color: #ed7521;
+            }
+            
+            QComboBox:focus {
+                border: 1px solid #ed7521;
+            }""")
 
         row2CardLayout = QHBoxLayout(row2Card)
         row2CardLayout.setSpacing(40)
@@ -136,22 +211,54 @@ class addExpenseWindow(QMainWindow):
         self.categoryEntry = QComboBox()
         # Should change this to be extracted from the file and the selected "type"
         self.categoryEntry.addItems(["Salary", "Freelance", "Bonus", "Interest", "Food", "Rent", "Transport", "Shopping", "Utilities", "Entertainment"])
-        self.categoryEntry.setStyleSheet('''
-            font-size: 18px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #404040;
-            background-color: #222222;''')
+        self.categoryEntry.setStyleSheet("""
+            QComboBox {
+                font-size: 18px;
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #404040;
+                background-color: #222222;
+                font-family: Adwaita mono;
+            }
+            
+            QComboBox QAbstractItemView::item:hover {
+                background-color: #404040;
+                color: #ed7521;
+            }
+            
+            QComboBox QAbstractItemView::item:selected {
+                background-color: #222222;
+                color: #ed7521;
+            }
+            QComboBox:focus {
+                border: 1px solid #ed7521;
+            }""")
 
         # Account
         self.accountEntry = QComboBox()
         self.accountEntry.addItems(["Cash", "Bank", "Credit Card"])
-        self.accountEntry.setStyleSheet('''
-            font-size: 18px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #404040;
-            background-color: #222222;''')
+        self.accountEntry.setStyleSheet("""
+            QComboBox {
+                font-size: 18px;
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #404040;
+                background-color: #222222;
+                font-family: Adwaita mono;
+            }
+            
+            QComboBox QAbstractItemView::item:hover {
+                background-color: #404040;
+                color: #ed7521;
+            }
+            
+            QComboBox QAbstractItemView::item:selected {
+                background-color: #222222;
+                color: #ed7521;
+            }
+            QComboBox:focus {
+                border: 1px solid #ed7521;
+            }""")
 
         row3CardLayout = QHBoxLayout(row3Card)
         row3CardLayout.setSpacing(40)
@@ -161,7 +268,10 @@ class addExpenseWindow(QMainWindow):
         # Description
         row4Card = QFrame()
         row4Card.setStyleSheet('''
-            font-size: 18px;''')
+            font-size: 18px;
+            padding-left: 10px;
+            padding-top: 5px;
+            font-family: Adwaita mono;''')
 
         self.descriptionLabel = QLabel('Description')
         self.descriptionLabel.setStyleSheet('''
