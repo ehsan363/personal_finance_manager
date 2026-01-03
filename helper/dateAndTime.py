@@ -2,6 +2,9 @@ from datetime import datetime, date
 import random
 from itertools import compress
 
+from pygame.sprite import collide_mask
+
+
 def tdy():
     return datetime.now()
 
@@ -20,18 +23,21 @@ def greetingText():
         randomgreeting = random.choice(nightgreets)
         return randomgreeting
 
-def dateCompare(compareDate):
+def dateExtraction(dateToE):
     year = ''
     month = ''
     day = ''
-    for i in range(len(compareDate)):
+    for i in range(len(dateToE)):
         if i < 4:
-            year += compareDate[i]
-        elif i < 7 and compareDate[i] != '-':
-            month += compareDate[i]
-        elif i <=  9 and compareDate[i] != '-':
-            day += compareDate[i]
+            year += dateToE[i]
+        elif i < 7 and dateToE[i] != '-':
+            month += dateToE[i]
+        elif i <=  9 and dateToE[i] != '-':
+            day += dateToE[i]
+    return year, month, day
 
+def dateCompare(compareDate):
+    year, month, day = dateExtraction(compareDate)
     today = date.today()
     diffInDays = (date.today() - date(int(year), int(month), int(day))).days
     if diffInDays == 0:
@@ -46,3 +52,10 @@ def dateCompare(compareDate):
 def todayDate():
     tdyDate = date.today()
     return tdyDate
+
+def dateFormat(ch):
+    dt = datetime.strptime(ch, "%d-%m-%Y")
+
+    # Re-format datetime → string
+    new_date = dt.strftime("20%y-%m-%d")
+    return new_date

@@ -78,13 +78,19 @@ class DBmanager:
             return int(totalExpense)
 
     def categories(self, type):
-        cursor = self.conn.execute(f'SELECT * FROM categories WHERE type = ?;', (type,))
+        cursor = self.conn.execute(f'SELECT * FROM CATEGORIES WHERE type = ?;', (type,))
         categoriesFetched = cursor.fetchall()
         categorieList = []
         for row in categoriesFetched:
             categorieList.append(row['name'])
         return categorieList
 
+    def addExpenseToDB(self, amount, IorE, category, date, description, account):
+        self.cursor = self.conn.cursor()
+        self.cursor.execute('INSERT INTO TRANSACTIONS (amount, type, category, date, description, account) VALUES (?,?,?,?,?,?)', (amount, IorE, category, date, description, account))
+        self.conn.commit()
+        print('DONE')
+
     # Function to close SQLite
     def close(self):
-        conn.close()
+        self.conn.close()

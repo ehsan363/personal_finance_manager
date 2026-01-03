@@ -1,7 +1,7 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QDoubleSpinBox, QDateEdit, QComboBox, QTextEdit, QHBoxLayout, QFrame, QListView
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QDoubleSpinBox, QDateEdit, QComboBox, QTextEdit, QHBoxLayout, QFrame, QCheckBox
 from PySide6.QtGui import QIcon, QFont, QKeySequence
 from PySide6.QtCore import Qt, Signal, QDate
-from helper.dateAndTime import todayDate
+from helper.dateAndTime import todayDate, dateFormat
 from data.database import DBmanager
 
 class addExpenseWindow(QMainWindow):
@@ -173,7 +173,6 @@ class addExpenseWindow(QMainWindow):
         # Type
         self.typeEntry = QComboBox()
         self.typeEntry.addItems(['Income', 'Expense'])
-        self.typeEntry.setView(QListView())
         self.typeEntry.setStyleSheet("""
             QComboBox {
                 font-size: 18px;
@@ -313,6 +312,29 @@ class addExpenseWindow(QMainWindow):
             }
         ''')
 
+        self.resetCh = QCheckBox('Do not reset')
+        self.resetCh.setStyleSheet('''
+            QCheckBox {
+                spacing: 10px;
+                font-size: 14px;
+                color: #ed7521;
+                font-family: Adwaita mono;
+            }
+            QCheckBox::indicator {
+                width: 20px;
+                height: 20px;
+            }
+            QCheckBox::indicator:unchecked {
+                border: 2px solid #888;
+                background: white;
+                border-radius: 4px;
+            }
+            QCheckBox::indicator:checked {
+                border: 2px solid #ed7521;
+                border-radius: 4px;
+                background-color: #222222;
+            }''')
+
         row1.addWidget(row1Card)
         row2.addWidget(row2Card)
         row3.addWidget(row3Card)
@@ -326,6 +348,7 @@ class addExpenseWindow(QMainWindow):
         pageLayout.addLayout(row3)
         pageLayout.addLayout(row4)
         pageLayout.addWidget(self.submitBtn)
+        pageLayout.addWidget(self.resetCh)
 
         pageLayout.addStretch()
 
@@ -334,8 +357,30 @@ class addExpenseWindow(QMainWindow):
         centralWidget.setStyleSheet('background-color: #141414; color: #ed7521;')
         self.setCentralWidget(centralWidget)  # <-- Stuff into Central Widget
 
+    def resetForm(self):
+        self.dateEntry.setDate(QDate.currentDate())
+        self.amountEntry.setValue(0.0)
+        self.typeEntry.setCurrentIndex(0)
+        self.categoryEntry.setCurrentIndex(0)
+        self.accountEntry.setCurrentIndex(0)
+        self.descriptionEntry.clear()
+
     def enterDate(self):
-        print(self.categoryEntry.text())
+        db = DBmanager()
+        amount = self.amountEntry.text()
+        IorE = self.typeEntry.currentText()
+        category = self.categoryEntry.currentText()
+        date = self.dateEntry.text()
+        new_date = dateFormat(date)
+        description = self.descriptionEntry.toPlainText()
+        account = self.accountEntry.currentText()
+        amount = amount.rstrip(' AED')
+
+        db.addExpenseToDB(float(amount), IorE.lower(), category, new_date, description, account)
+        if self.resetCh.isChecked():
+            pass
+        else:
+            self.resetForm()
 
     def categoryChange(self, typeSelected):
         self.categoryEntry.clear()
@@ -343,6 +388,7 @@ class addExpenseWindow(QMainWindow):
         db = DBmanager()
         self.categoryDBIncome = db.categories('income')
         self.categoryDBExpense = db.categories('expense')
+        db.close()
 
         if typeSelected == 'Income':
             self.categoryEntry.addItems(self.categoryDBIncome)
