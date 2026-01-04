@@ -85,6 +85,14 @@ class DBmanager:
             categorieList.append(row['name'])
         return categorieList
 
+    def getType(self, selectedIDs):
+        for i in selectedIDs:
+            cursor = self.conn.execute(f'SELECT TYPE FROM TRANSACTIONS WHERE ID = {int(i)};')
+            data = cursor.fetchall()
+            for i in data:
+                type = i['type']
+                return type
+
     def addTransactionToDB(self, amount, IorE, category, date, description, account):
         self.cursor = self.conn.cursor()
         self.cursor.execute('INSERT INTO TRANSACTIONS (amount, type, category, date, description, account) VALUES (?,?,?,?,?,?)', (amount, IorE, category, date, description, account))
@@ -168,6 +176,12 @@ class DBmanager:
             else:
                 newType = 'income'
             code = self.cursor.execute(f'UPDATE TRANSACTIONS SET TYPE = "{newType}" WHERE ID = {int(i)};')
+            self.conn.commit()
+
+    def changeCategory(self, selectedIDs, newCategory):
+        self.cursor = self.conn.cursor()
+        for i in selectedIDs:
+            code = self.cursor.execute(f'UPDATE TRANSACTIONS SET CATEGORY = "{newCategory}" WHERE ID = {int(i)};')
             self.conn.commit()
 
     # Function to close SQLite

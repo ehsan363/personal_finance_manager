@@ -131,6 +131,26 @@ class editExpenseWindow(QMainWindow):
             ''')
         changeTypeButton.clicked.connect(lambda: self.handleSelected('chType'))
 
+        changeCategoryButton = QPushButton(QIcon('img/changeCategory_icon.png'), 'Change Category')
+        changeCategoryButton.setIconSize(QSize(26, 26))
+        changeCategoryButton.setStyleSheet('''
+                    QPushButton {
+                        background-color: #ed7521;
+                        color: black;
+                        padding: 10px 20px 10px 20px;
+                        border-radius: 8px;
+                        font-size: 18px;
+                        text-align: left;
+                    }
+                    QPushButton:hover {
+                        background-color: #f08337;
+                    }
+                    QPushButton:pressed {
+                        background-color: #ed6709;
+                    }
+                    ''')
+        changeCategoryButton.clicked.connect(lambda: self.handleSelected('chCate'))
+
         self.textEntry = QLineEdit()
         self.textEntry.setPlaceholderText('Amount: Number | Date: YYYY-MM-DD ')
         self.textEntry.setAlignment(Qt.AlignLeft)
@@ -141,6 +161,7 @@ class editExpenseWindow(QMainWindow):
         buttonCardLayout.addWidget(deleteButton)
         buttonCardLayout.addWidget(changeAmountButton)
         buttonCardLayout.addWidget(changeTypeButton)
+        buttonCardLayout.addWidget(changeCategoryButton)
         buttonCardLayout.addWidget(self.textEntry)
 
         topRow.addWidget(buttonCard)
@@ -289,6 +310,15 @@ class editExpenseWindow(QMainWindow):
 
         elif function == 'chType':
             db.changeType(self.selectedIDs)
+            self.transactionSort(self.sortToSaver)
+            self.deleteSelectedIDs()
+
+        elif function == 'chCate':
+            newCategory = self.textEntry.text().title()
+            fetchedType = db.getType(self.selectedIDs)
+            fetchedCategories = db.categories(fetchedType)
+            if newCategory in fetchedCategories:
+                db.changeCategory(self.selectedIDs, newCategory)
             self.transactionSort(self.sortToSaver)
             self.deleteSelectedIDs()
 
