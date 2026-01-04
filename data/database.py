@@ -120,6 +120,41 @@ class DBmanager:
         self.data = code.fetchall()
         return self.data
 
+    def editingTransactionHistory(self, sortedTo, transactionType):
+        self.cursor = self.conn.cursor()
+        if sortedTo == 'Date ASC':
+            code = self.cursor.execute(f'SELECT * FROM TRANSACTIONS WHERE TYPE = "{transactionType}" ORDER BY DATE ASC;')
+
+        elif sortedTo == 'Date DESC':
+            code = self.cursor.execute(f'SELECT * FROM TRANSACTIONS WHERE TYPE = "{transactionType}" ORDER BY DATE DESC;')
+
+        elif sortedTo == 'Created ASC':
+            code = self.cursor.execute(f'SELECT * FROM TRANSACTIONS WHERE TYPE = "{transactionType}" ORDER BY CREATED_AT ASC;')
+
+        elif sortedTo == 'Created DESC':
+            code = self.cursor.execute(f'SELECT * FROM TRANSACTIONS WHERE TYPE = "{transactionType}" ORDER BY CREATED_AT DESC;')
+
+        elif sortedTo == 'Amount H->L':
+            code = self.cursor.execute(f'SELECT * FROM TRANSACTIONS WHERE TYPE = "{transactionType}" ORDER BY AMOUNT DESC;')
+
+        elif sortedTo == 'Amount L->H':
+            code = self.cursor.execute(f'SELECT * FROM TRANSACTIONS WHERE TYPE = "{transactionType}" ORDER BY AMOUNT ASC;')
+
+        self.data = code.fetchall()
+        return self.data
+
+    def deleteSelected(self, selectedIDs):
+        self.cursor = self.conn.cursor()
+        for i in selectedIDs:
+            code = self.cursor.execute(f'DELETE FROM TRANSACTIONS WHERE ID = {int(i)};')
+            self.conn.commit()
+
+    def changeAmount(self,selectedIDs, newAmount):
+        self.cursor = self.conn.cursor()
+        for i in selectedIDs:
+            code = self.cursor.execute(f'UPDATE TRANSACTIONS SET AMOUNT = {newAmount} WHERE ID = {int(i)};')
+            self.conn.commit()
+
     # Function to close SQLite
     def close(self):
         self.conn.close()

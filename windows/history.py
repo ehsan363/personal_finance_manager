@@ -45,20 +45,20 @@ class historyWindow(QMainWindow):
         backButton = QPushButton(QIcon('img/back_icon.png'), 'Back')
         backButton.setShortcut(QKeySequence('Ctrl+W'))
         backButton.setStyleSheet('''
-        QPushButton {
-            background-color: #ed7521;
-            color: black;
-            padding: 10px 20px 10px 20px;
-            border-radius: 8px;
-            font-size: 16px;
-            text-align: left;
-        }
-        QPushButton:hover {
-            background-color: #f08337;
-        }
-        QPushButton:pressed {
-            background-color: #ed6709;
-        }
+            QPushButton {
+                background-color: #ed7521;
+                color: black;
+                padding: 10px 20px 10px 20px;
+                border-radius: 8px;
+                font-size: 16px;
+                text-align: left;
+            }
+            QPushButton:hover {
+                background-color: #f08337;
+            }
+            QPushButton:pressed {
+                background-color: #ed6709;
+            }
         ''')
         backButton.clicked.connect(self.goHome_Signal.emit)
 
@@ -137,10 +137,11 @@ class historyWindow(QMainWindow):
 
 {i['description']}                                                                                                                                                      {i['created_at']:>20}''')
             label.setStyleSheet(f'''
-                            font-size: 24px;
-                            padding: 10px;
-                            border: 3px solid {transactionColorCode};
-                            border-radius: 15px;
-                            color: #e8e8e8;''')
+                font-size: 24px;
+                padding: 10px;
+                border: 3px solid {transactionColorCode};
+                border-radius: 15px;
+                color: #e8e8e8;''')
+
             label.setSizePolicy(label.sizePolicy().horizontalPolicy(), label.sizePolicy().verticalPolicy())
             self.contentLayout.insertWidget(self.contentLayout.count() - 1, label)
