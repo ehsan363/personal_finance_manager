@@ -91,6 +91,12 @@ class DBmanager:
         self.conn.commit()
         print('DONE')
 
+    def transactionHistory(self):
+        self.cursor = self.conn.cursor()
+        code = self.cursor.execute('SELECT * FROM TRANSACTIONS ORDER BY DATE DESC;')
+        self.data = code.fetchall()
+        return self.data
+
     # Function to close SQLite
     def close(self):
         self.conn.close()

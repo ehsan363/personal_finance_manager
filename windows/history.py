@@ -1,6 +1,8 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame, QScrollArea
 from PySide6.QtGui import QIcon, QFont, QKeySequence
 from PySide6.QtCore import Qt, Signal
+from data.database import DBmanager
+from helper.dateAndTime import dateExtraction
 
 class historyWindow(QMainWindow):
     goHome_Signal = Signal()
@@ -22,7 +24,9 @@ class historyWindow(QMainWindow):
         font.setBold(True)
 
         # Layout
-        pageLayout = QVBoxLayout()
+        centralWidget = QWidget()
+        self.setCentralWidget(centralWidget)
+        pageLayout = QVBoxLayout(centralWidget)
         pageLayout.setAlignment(Qt.AlignTop)
         pageLayout.setSpacing(35)
 
@@ -57,12 +61,45 @@ class historyWindow(QMainWindow):
         ''')
         backButton.clicked.connect(self.goHome_Signal.emit)
 
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+
+        content = QWidget()
+        contentLayout = QVBoxLayout(content)
+        contentLayout.setSpacing(30)
+        contentLayout.addStretch()
+
+        db = DBmanager()
+        data = db.transactionHistory()
+
+        for i in data:
+            year, month, day = dateExtraction(i['date'])
+            fullDate = day+'-'+month+'-'+year
+
+            if i['type'] == 'income':
+                transactionColorCode = '#11b343'
+            elif i['type'] == 'expense':
+                transactionColorCode = '#c71413'
+
+            label = QLabel(f'''{fullDate:<10}                               {i['category']:^22}                                                                           {i['account']:^20}                            {i['amount']:>8} AED
+
+{i['description']}                                                                                                                                                      {i['created_at']:>20}''')
+
+            label.setStyleSheet(f'''
+                font-size: 24px;
+                padding: 10px;
+                border: 3px solid {transactionColorCode};
+                border-radius: 15px;
+                color: #e8e8e8;''')
+            label.setSizePolicy(label.sizePolicy().horizontalPolicy(), label.sizePolicy().verticalPolicy())
+            contentLayout.insertWidget(contentLayout.count() - 1, label)
+
+        scroll.setWidget(content)
+
         pageLayout.addWidget(backButton)
         pageLayout.addWidget(self.headingLabel)
-
+        pageLayout.addWidget(scroll, 1)
         pageLayout.addStretch()
 
-        centralWidget = QWidget()
-        centralWidget.setLayout(pageLayout)
         centralWidget.setStyleSheet('background-color: #141414; color: #ed7521;')
         self.setCentralWidget(centralWidget)  # <-- Stuff into Central Widget
