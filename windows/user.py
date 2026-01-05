@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QLineEdit
 from PySide6.QtGui import QIcon, QFont, QKeySequence
 from PySide6.QtCore import Qt, Signal
 
@@ -57,8 +57,52 @@ class userWindow(QMainWindow):
         ''')
         backButton.clicked.connect(self.goHome_Signal.emit)
 
+        self.enterName = QLineEdit()
+        self.enterName.setPlaceholderText('Enter Your Name')
+        self.enterName.setStyleSheet("""
+            QLineEdit {
+                background-color: #1e1e1e;
+                color: #ededed;
+                border: 2px solid #333;
+                border-radius: 8px;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            QLineEdit:hover {
+                border-color: #ed7521;
+            }
+            QLineEdit:focus {
+                border-color: #ed7521;
+                background-color: #222;
+            }
+        """)
+
+        submitBtn = QPushButton('Enter')
+        submitBtn.setStyleSheet('''
+            QPushButton {
+                background-color: #ed7521;
+                color: black;
+                padding: 10px 20px 10px 20px;
+                border-radius: 8px;
+                border: 2px solid black;
+                font-size: 18px;
+                text-align: left;
+            }
+            QPushButton:hover {
+                background-color: #f08337;
+            }
+            QPushButton:pressed {
+                background-color: #ed6709;
+            }
+            ''')
+        submitBtn.clicked.connect(self.changeName)
+
+
         pageLayout.addWidget(backButton)
         pageLayout.addWidget(self.headingLabel)
+        pageLayout.addWidget(self.enterName)
+        pageLayout.addWidget(submitBtn)
+
 
         pageLayout.addStretch()
 
@@ -66,3 +110,9 @@ class userWindow(QMainWindow):
         centralWidget.setLayout(pageLayout)
         centralWidget.setStyleSheet('background-color: #141414; color: #ed7521;')
         self.setCentralWidget(centralWidget)  # <-- Stuff into Central Widget
+
+    def changeName(self):
+        newName = self.enterName.text()
+        with open('data/user.txt', 'w') as nameFile:
+            nameFile.write(f'{newName}\n')
+        self.goHome_Signal.emit()
