@@ -1,9 +1,6 @@
 from datetime import datetime, date
 import random
 
-from pygame.sprite import collide_mask
-
-
 def tdy():
     return datetime.now()
 
