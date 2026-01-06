@@ -69,3 +69,5 @@ def reportDateCompare(lastDate):
     month2 = currentDate[5:7]
     if int(year1) < int(year2) or int(month1) < int(month2):
         return 'Outdated', year2, month2
+    else:
+        return 'Uptodate', year2, month2

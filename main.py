@@ -105,6 +105,8 @@ Expenses By Category:
 
             with open(path+f'Report{year}-{month}.txt','a') as report:
                 report.write(TXT)
+            with open('helper/reportGenerationDate.txt','w') as reportLog:
+                reportLog.write(f'{year}-{month}')
 
 
 
