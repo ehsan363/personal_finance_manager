@@ -36,7 +36,7 @@ class DBmanager:
             SELECT category, amount, date, type
             FROM transactions
             ORDER BY date DESC
-            LIMIT 10;''')
+            LIMIT 5;''')
         rawRows = cursor.fetchall()
         rows = []
         data = []

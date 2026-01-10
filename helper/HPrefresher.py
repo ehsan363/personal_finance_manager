@@ -1,5 +1,4 @@
-from PySide6.QtWidgets import QLabel, QVBoxLayout
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel
 from data.database import DBmanager
 from helper.barchartMatplotlib import update_bar_chart
 from helper.dateAndTime import greetingText, dateCompare
