@@ -1,6 +1,5 @@
 # Personal Finance Manager
-An application made using python, to take care of one's personal finances.
 
-<b>Project Status:</b> ![Static Badge](https://img.shields.io/badge/Status-Work--Done-Done)
+Fund Track is a personal finance manager application for PC created using python.
 ## <u>License</u>
 MIT

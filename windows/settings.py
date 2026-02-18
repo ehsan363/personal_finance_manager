@@ -1,6 +1,7 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame, QLineEdit, QHBoxLayout
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame, QLineEdit, QHBoxLayout, QFileDialog
 from PySide6.QtGui import QIcon, QFont, QKeySequence
 from PySide6.QtCore import Qt, Signal
+from helper.reportGenerator import monthlyReport
 
 class settingsWindow(QMainWindow):
     goHome_Signal = Signal()
@@ -60,35 +61,13 @@ class settingsWindow(QMainWindow):
         pathCard = QFrame()
         pathCard.setStyleSheet('''
             font-size: 18px;
-            font-family: Adwaita mono;
-            background-color: #222222;
-            border-radius: 10px;
-            border: 2px solid #ed7521;''')
+            font-family: Adwaita mono;''')
 
         pathCardLayout = QHBoxLayout(pathCard)
         pathCardLayout.setAlignment(Qt.AlignLeft)
 
-        self.pathEnter = QLineEdit()
-        self.pathEnter.setPlaceholderText('Enter Path')
-        self.pathEnter.setStyleSheet("""
-            QLineEdit {
-                background-color: #1e1e1e;
-                color: #ededed;
-                border: 2px solid #333;
-                border-radius: 8px;
-                padding: 8px 12px;
-                font-size: 14px;
-            }
-            QLineEdit:hover {
-                border-color: #ed7521;
-            }
-            QLineEdit:focus {
-                border-color: #ed7521;
-                background-color: #222;
-            }
-            """)
-        enterBtn = QPushButton('Enter')
-        enterBtn.setStyleSheet('''
+        exportBtn = QPushButton('Export Path')
+        exportBtn.setStyleSheet('''
             QPushButton {
                 background-color: #ed7521;
                 color: black;
@@ -104,10 +83,9 @@ class settingsWindow(QMainWindow):
                 background-color: #ed6709;
             }
             ''')
-        enterBtn.clicked.connect(self.pathChanger)
+        exportBtn.clicked.connect(self.pathChanger)
 
-        pathCardLayout.addWidget(self.pathEnter)
-        pathCardLayout.addWidget(enterBtn)
+        pathCardLayout.addWidget(exportBtn)
 
         # Shortcuts
         shortcutsCard = QFrame()
@@ -228,6 +206,6 @@ class settingsWindow(QMainWindow):
         self.setCentralWidget(centralWidget)  # <-- Stuff into Central Widget
 
     def pathChanger(self):
-        with open('helper/reportSavingPath.txt', 'w') as Path:
-            Path.write(self.pathEnter.text())
-        self.goHome_Signal.emit()
+        folder = QFileDialog.getExistingDirectory(self, 'Select Directory', '', QFileDialog.ShowDirsOnly)
+        with open("helper/reportSavingPath.txt", 'w') as path:
+            path.write(folder)
