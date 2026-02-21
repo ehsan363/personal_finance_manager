@@ -1,21 +1,33 @@
+'''
+This file controls all the GUI elements of Settings window.
+This file will get opened by main.py whenever the Settings button is clicked or the shortcut used.
+'''
+
+# Importing GUI elements
 from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame, QLineEdit, QHBoxLayout, QFileDialog
 from PySide6.QtGui import QIcon, QFont, QKeySequence
 from PySide6.QtCore import Qt, Signal
-from helper.reportGenerator import monthlyReport
+
+# json to read and write json file for the options selected
 import json
 
 class settingsWindow(QMainWindow):
+    '''
+    Controls all the GUI elements and functions of Settings window.
+    Includes:
+    - Changing the finance report path
+    - Changing the currency suffix
+    '''
     goHome_Signal = Signal()
 
     def __init__(self):
         super().__init__()
         self.setWindowTitle('FundTrack') # Title of the window
 
-        # Window size
+        # Window settings
         self.resize(1920, 1080)
         self.setMinimumSize(1170, 650)
 
-        # Window icon
         self.setWindowIcon(QIcon('img/iconOrange#141414bgR.png'))
 
         # Font elements
@@ -39,8 +51,9 @@ class settingsWindow(QMainWindow):
             padding-top: 15px;
             padding-left: 10px;""")
 
+        # Back button to return to Homepage
         backButton = QPushButton(QIcon('img/back_icon.png'), 'Back')
-        backButton.setShortcut(QKeySequence('Ctrl+W'))
+        backButton.setShortcut(QKeySequence('Ctrl+W')) # Shortcut key instead of pressing the button
         backButton.setStyleSheet('''
         QPushButton {
             background-color: #ed7521;
@@ -59,14 +72,17 @@ class settingsWindow(QMainWindow):
         ''')
         backButton.clicked.connect(self.goHome_Signal.emit)
 
+        # Card for all the settings elements
         pathCard = QFrame()
         pathCard.setStyleSheet('''
             font-size: 18px;
             font-family: Adwaita mono;''')
 
+        # Layout for the settings elements (Horizontal)
         pathCardLayout = QHBoxLayout(pathCard)
         pathCardLayout.setAlignment(Qt.AlignLeft)
 
+        # Button to change the report exporting path
         exportBtn = QPushButton('Export Path')
         exportBtn.setStyleSheet('''
             QPushButton {
@@ -86,6 +102,7 @@ class settingsWindow(QMainWindow):
             ''')
         exportBtn.clicked.connect(self.pathChanger)
 
+        # 'Entry' to enter new currency symbol
         self.currencyEntry = QLineEdit()
         self.currencyEntry.setPlaceholderText('Currency Symbol')
         self.currencyEntry.setFixedWidth(230)
@@ -98,17 +115,16 @@ class settingsWindow(QMainWindow):
             padding: 5px 10px 5px;
             ''')
 
+        # Card to hold currency entry and and save button
         currencyCard = QFrame()
         currencyCard.setStyleSheet('''
             font-size: 18px;
             font-family: Adwaita mono;
         ''')
-        currencyCardLayout = QVBoxLayout(currencyCard)
-        currencyCardLayout.setAlignment(Qt.AlignLeft)
-        currencyCardLayout.addWidget(self.currencyEntry)
 
-
+        # Button to save the new currency
         saveBtn = QPushButton('Save')
+        saveBtn.setFixedWidth(85)
         saveBtn.setStyleSheet('''
             QPushButton {
                 background-color: #ed7521;
@@ -127,11 +143,24 @@ class settingsWindow(QMainWindow):
             ''')
         saveBtn.clicked.connect(self.saveSettings)
 
+        # Layout to hold currency entry and and save button
+        currencyCardLayout = QHBoxLayout(currencyCard)
+        currencyCardLayout.setAlignment(Qt.AlignLeft)
+        currencyCardLayout.addWidget(self.currencyEntry)
+        currencyCardLayout.addWidget(saveBtn)
+
+        '''
+        Export button and card that holds currency entry and save button added to pathCardLayout.
+        currencyCard was added PathCardLayout so that the elements inside currencyCardLayout will,
+        stay in the same horizontal line with export button.
+        '''
         pathCardLayout.addWidget(exportBtn)
         pathCardLayout.addWidget(currencyCard)
-        pathCardLayout.addWidget(saveBtn)
 
         # Shortcuts
+        '''
+        All the available shortcuts in the program being displayed in the settings window.
+        '''
         shortcutsCard = QFrame()
         shortcutsCard.setStyleSheet('''
             font-size: 18px;
@@ -247,9 +276,12 @@ class settingsWindow(QMainWindow):
         centralWidget = QWidget()
         centralWidget.setLayout(pageLayout)
         centralWidget.setStyleSheet('background-color: #141414; color: #ed7521;')
-        self.setCentralWidget(centralWidget)  # <-- Stuff into Central Widget
+        self.setCentralWidget(centralWidget)
 
     def pathChanger(self):
+        '''
+        Function to change the path of the report exporting in the json file
+        '''
         folder = QFileDialog.getExistingDirectory(self, 'Select Directory', '', QFileDialog.ShowDirsOnly)
 
         with open('data/config.json', 'r') as f:
@@ -261,6 +293,9 @@ class settingsWindow(QMainWindow):
             json.dump(data, f, indent=4)
 
     def saveSettings(self):
+        '''
+        Function to save the new currency suffix and any new settings that will be saved using the "save" button
+        '''
         newCurrency = self.currencyEntry.text()
 
         with open('data/config.json', 'r') as f:

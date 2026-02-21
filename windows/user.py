@@ -1,20 +1,34 @@
+'''
+This file controls all the GUI elements of User window.
+This file will get opened by main.py whenever the User button is clicked  or the shortcut used.
+'''
+
+# Importing GUI elements
 from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QLineEdit, QDoubleSpinBox
 from PySide6.QtGui import QIcon, QFont, QKeySequence
 from PySide6.QtCore import Qt, Signal
+
+# json to read and write json file for the options selected
 import json
 
 class userWindow(QMainWindow):
+    '''
+    Controls all the GUI elements and functions of User window.
+    Includes:
+    - Change in name
+    - Change in budget
+    '''
     goHome_Signal = Signal()
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('FundTrack') # Title of the window
 
-        # Window size
+        # Window settings
+        self.setWindowTitle('FundTrack')
+
         self.resize(1920, 1080)
         self.setMinimumSize(1170, 650)
 
-        # Window icon
         self.setWindowIcon(QIcon('img/iconOrange#141414bgR.png'))
 
         # Font elements
@@ -38,8 +52,9 @@ class userWindow(QMainWindow):
             padding-top: 15px;
             padding-left: 10px;""")
 
+        # Back button to return to Homepage
         backButton = QPushButton(QIcon('img/back_icon.png'), 'Back')
-        backButton.setShortcut(QKeySequence('Ctrl+W'))
+        backButton.setShortcut(QKeySequence('Ctrl+W')) # Shortcut key instead of pressing the button
         backButton.setStyleSheet('''
         QPushButton {
             background-color: #ed7521;
@@ -58,6 +73,7 @@ class userWindow(QMainWindow):
         ''')
         backButton.clicked.connect(self.goHome_Signal.emit)
 
+        # Entry to enter the new name
         self.enterName = QLineEdit()
         self.enterName.setPlaceholderText('Enter Your Name')
         self.enterName.setStyleSheet("""
@@ -78,11 +94,14 @@ class userWindow(QMainWindow):
             }
         """)
 
+        # Entry to enter the new budget
         self.budgetEntry = QDoubleSpinBox()
         self.budgetEntry.setDecimals(2)
         self.budgetEntry.setMaximum(10_000_000)
 
-        with open('data/config.json') as f:
+        # Getting suffix from json file
+        # TODO: Option to select between sufix and prefix
+        with open('data/config.json', 'r') as f:
             data = json.load(f)
             currencySuffix = f' {data["CurrencySuffix"]}'
         self.budgetEntry.setSuffix(currencySuffix)
@@ -110,6 +129,7 @@ class userWindow(QMainWindow):
                 border: none;
             }''')
 
+        # Enter button to save the entered data
         submitBtn = QPushButton('Enter')
         submitBtn.setStyleSheet('''
             QPushButton {
@@ -130,7 +150,7 @@ class userWindow(QMainWindow):
             ''')
         submitBtn.clicked.connect(self.changeName)
 
-
+        # Adding each element to the main page layout
         pageLayout.addWidget(backButton)
         pageLayout.addWidget(self.headingLabel)
         pageLayout.addWidget(self.enterName)
@@ -143,9 +163,12 @@ class userWindow(QMainWindow):
         centralWidget = QWidget()
         centralWidget.setLayout(pageLayout)
         centralWidget.setStyleSheet('background-color: #141414; color: #ed7521;')
-        self.setCentralWidget(centralWidget)  # <-- Stuff into Central Widget
+        self.setCentralWidget(centralWidget)
 
     def changeName(self):
+        '''
+        Function to change the name of the user in the json file.
+        '''
         newName = self.enterName.text()
         if len(newName) != 0:
             with open('data/data.json', 'r') as f:
